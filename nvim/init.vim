@@ -7,6 +7,7 @@ set shiftwidth=4
 set number
 set relativenumber
 set cursorline
+set scrolloff=8
 
 " Plugins
 
@@ -23,15 +24,17 @@ Plug 'numToStr/Comment.nvim'
 Plug 'folke/which-key.nvim'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'neovim/nvim-lspconfig'
 Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'mfussenegger/nvim-lint'
 Plug 'mhartington/formatter.nvim'
 Plug 'nvim-tree/nvim-tree.lua'
+Plug 'tpope/vim-abolish'
 
 " Theme plugins
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
@@ -42,12 +45,23 @@ call plug#end()
 
 " Plugin configurations
 lua require("mason").setup()
+lua require("mason-lspconfig").setup()
 lua require("nvim-autopairs").setup {}
 lua require("lualine").setup()
 lua require("Comment").setup()
 lua require("nvim-web-devicons").setup()
 lua require("nvim-tree").setup()
 lua require("transparent").setup()
+
+""" null-ls
+lua << EOF
+    local null_ls = require("null-ls")
+    null_ls.setup({
+        sources = {
+            null_ls.builtins.diagnostics.ruff
+        }
+    })
+EOF
 
 """ indent_blankline
 lua << EOF
@@ -101,7 +115,7 @@ lua << EOF
                 c_cpp_formatter
             },
             python = {
-                require("formatter.filetypes.python").black
+                require("formatter.filetypes.python").ruff
             }
         }
     }
@@ -136,7 +150,7 @@ nnoremap <silent> <leader>ww <C-w>w
 nnoremap <silent> <leader>wW <C-w>W
 nnoremap <silent> <leader>f :Format<CR>
 nnoremap <silent> <leader>tb :Telescope buffers<CR>
-nnoremap <silent> <leader>tf :Telescope fd<CR>
+nnoremap <silent> <leader>tf :Telescope find_files<CR>
 nnoremap <silent> <leader>bb :NvimTreeToggle<CR>
 
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#confirm() : "\<Tab>"
