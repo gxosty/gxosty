@@ -8,6 +8,7 @@ set number
 set relativenumber
 set cursorline
 set scrolloff=8
+set nowrap
 
 " Plugins
 
@@ -123,7 +124,7 @@ EOF
 
 " Theme configuration
 lua require("tokyonight").setup { transparent = vim.g.transparent_enabled }
-colorscheme tokyonight-night
+colorscheme catppuccin
 
 lua << EOF
     local transparent = require("transparent")
