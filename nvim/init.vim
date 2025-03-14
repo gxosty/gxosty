@@ -17,6 +17,7 @@ call plug#begin()
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'MeanderingProgrammer/render-markdown.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.8'}
@@ -36,13 +37,74 @@ Plug 'mfussenegger/nvim-lint'
 Plug 'mhartington/formatter.nvim'
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'tpope/vim-abolish'
+Plug 'RRethy/vim-illuminate'
+Plug 'rcarriga/nvim-notify'
+Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
+
+function! UpdateRemotePlugins(...)
+    " Needed to refresh runtime files
+    let &rtp=&rtp
+    UpdateRemotePlugins
+endfunction
+
+Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
 
 " Theme plugins
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'folke/tokyonight.nvim'
+Plug 'loctvl842/monokai-pro.nvim'
 Plug 'xiyaowong/transparent.nvim'
+Plug 'sphamba/smear-cursor.nvim'
+Plug 'karb94/neoscroll.nvim'
 
 call plug#end()
+
+" Theme configuration
+lua require("tokyonight").setup { transparent = vim.g.transparent_enabled }
+lua require("transparent").setup()
+lua require("smear_cursor").enabled = true
+
+lua << EOF
+    local transparent = require("transparent")
+    transparent.clear_prefix("NvimTree")
+
+
+    require("monokai-pro").setup {
+        filter = "octagon",
+        background_clear = {"telescope"}
+    }
+
+    local neoscroll = require("neoscroll").setup {
+        mappings = {
+            -- "<C-k>", "<C-j>",
+            -- "<C-h>", "<C-l>",
+            -- "<C-y>", "<C-b>",
+            -- "zt", "zz", "zb"
+        },
+        duration_multiplier = .5,
+        performance_mode = false,
+        easing = "quintic"
+    }
+
+    local keymaps = {
+        ["<C-u>"] = function() require("neoscroll").ctrl_u({ duration = 250 }) end;
+        ["<C-d>"] = function() require("neoscroll").ctrl_d({ duration = 250 }) end;
+        ["<C-h>"] = function() require("neoscroll").ctrl_b({ duration = 450 }) end;
+        ["<C-l>"] = function() require("neoscroll").ctrl_f({ duration = 450 }) end;
+        ["<C-k>"] = function() require("neoscroll").scroll(-0.1, { move_cursor=true; duration = 100 }) end;
+        ["<C-j>"] = function() require("neoscroll").scroll(0.1, { move_cursor=true; duration = 100 }) end;
+        ["zt"]    = function() require("neoscroll").zt({ half_win_duration = 250 }) end;
+        ["zz"]    = function() require("neoscroll").zz({ half_win_duration = 250 }) end;
+        ["zb"]    = function() require("neoscroll").zb({ half_win_duration = 250 }) end;
+    }
+
+    local modes = { 'n', 'v', 'x' }
+    for key, func in pairs(keymaps) do
+        vim.keymap.set(modes, key, func)
+    end
+EOF
+
+colorscheme monokai-pro
 
 " Plugin configurations
 lua require("mason").setup()
@@ -52,7 +114,10 @@ lua require("lualine").setup()
 lua require("Comment").setup()
 lua require("nvim-web-devicons").setup()
 lua require("nvim-tree").setup()
-lua require("transparent").setup()
+lua require("toggleterm").setup()
+lua vim.notify = require("notify")
+
+call wilder#setup({'modes': [':', '/', '?']})
 
 """ null-ls
 lua << EOF
@@ -122,38 +187,39 @@ lua << EOF
     }
 EOF
 
-" Theme configuration
-lua require("tokyonight").setup { transparent = vim.g.transparent_enabled }
-colorscheme catppuccin
-
 lua << EOF
-    local transparent = require("transparent")
-    transparent.clear_prefix("NvimTree")
+    require("telescope").setup {
+        defaults = {
+            -- borderchars = { "█", " ", "▀", "█", "█", " ", " ", "▀" }
+        }
+    }
 EOF
-
-" function! SetBackgroundTransparent()
-"     highlight Normal guibg=none
-"     highlight NonText guibg=none
-"     highlight Normal ctermbg=none
-"     highlight NonText ctermbg=none
-" endfunction
-"
-" call SetBackgroundTransparent()
-"
-" autocmd BufWinEnter,WinEnter * call SetBackgroundTransparent()
-
-
 
 " Keymaps
 let mapleader = " "
 
+""" Switch between windows
 nnoremap <silent> <leader>ww <C-w>w
 nnoremap <silent> <leader>wW <C-w>W
+
+""" Selection
+nnoremap <silent> <leader>ss ggVG
+nnoremap <silent> <leader>sw viw
+
+""" Format buffer
 nnoremap <silent> <leader>f :Format<CR>
+
+""" Telescope
 nnoremap <silent> <leader>tb :Telescope buffers<CR>
 nnoremap <silent> <leader>tf :Telescope find_files<CR>
+
+""" Side-Panel
 nnoremap <silent> <leader>bb :NvimTreeToggle<CR>
 
+""" ToggleTerm
+nnoremap <silent> <C-`> :ToggleTerm direction=horizontal
+
+""" Coc auto-complete
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#confirm() : "\<Tab>"
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 inoremap <silent><expr> <Esc> coc#pum#visible() ? coc#pum#cancel() : "\<Esc>"
