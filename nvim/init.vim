@@ -9,6 +9,7 @@ set relativenumber
 set cursorline
 set scrolloff=8
 set nowrap
+set noshowmode
 
 " Plugins
 
@@ -38,6 +39,7 @@ Plug 'mhartington/formatter.nvim'
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'tpope/vim-abolish'
 Plug 'RRethy/vim-illuminate'
+Plug 'norcalli/nvim-colorizer.lua'
 Plug 'rcarriga/nvim-notify'
 Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
@@ -67,7 +69,7 @@ lua require("smear_cursor").enabled = true
 lua << EOF
     local transparent = require("transparent")
     transparent.clear_prefix("NvimTree")
-
+    transparent.clear_prefix("ToggleTerm")
 
     require("monokai-pro").setup {
         filter = "octagon",
@@ -114,10 +116,12 @@ lua require("lualine").setup()
 lua require("Comment").setup()
 lua require("nvim-web-devicons").setup()
 lua require("nvim-tree").setup()
-lua require("toggleterm").setup()
+lua require("colorizer").setup()
 lua vim.notify = require("notify")
 
 call wilder#setup({'modes': [':', '/', '?']})
+
+lua require("toggleterm").setup({open_mapping = [[<c-\>]]})
 
 """ null-ls
 lua << EOF
@@ -215,9 +219,6 @@ nnoremap <silent> <leader>tf :Telescope find_files<CR>
 
 """ Side-Panel
 nnoremap <silent> <leader>bb :NvimTreeToggle<CR>
-
-""" ToggleTerm
-nnoremap <silent> <C-`> :ToggleTerm direction=horizontal
 
 """ Coc auto-complete
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#confirm() : "\<Tab>"
