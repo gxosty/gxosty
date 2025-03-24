@@ -8,6 +8,7 @@ set number
 set relativenumber
 set cursorline
 set scrolloff=8
+set sidescrolloff=8
 set nowrap
 set noshowmode
 
@@ -26,9 +27,14 @@ Plug 'nvim-tree/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'numToStr/Comment.nvim'
 Plug 'folke/which-key.nvim'
 Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'mfussenegger/nvim-dap'
@@ -42,6 +48,19 @@ Plug 'RRethy/vim-illuminate'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'rcarriga/nvim-notify'
 Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
+Plug 'nanozuki/tabby.nvim'
+Plug 'nkakouros-original/numbers.nvim'
+Plug 'mcauley-penney/visual-whitespace.nvim'
+Plug 'rlychrisg/truncateline.nvim'
+Plug 'tris203/precognition.nvim'
+Plug 'windwp/nvim-ts-autotag'
+Plug 'andersevenrud/nvim_context_vt'
+Plug 'nvim-treesitter/nvim-treesitter-context'
+Plug 'nacro90/numb.nvim'
+Plug 'fedepujol/move.nvim'
+
+" I may find this interesting
+" Plug 'nosduco/remote-sshfs.nvim'
 
 function! UpdateRemotePlugins(...)
     " Needed to refresh runtime files
@@ -58,13 +77,15 @@ Plug 'loctvl842/monokai-pro.nvim'
 Plug 'xiyaowong/transparent.nvim'
 Plug 'sphamba/smear-cursor.nvim'
 Plug 'karb94/neoscroll.nvim'
+Plug 'mawkler/modicator.nvim'
 
 call plug#end()
 
 " Theme configuration
 lua require("tokyonight").setup { transparent = vim.g.transparent_enabled }
 lua require("transparent").setup()
-lua require("smear_cursor").enabled = true
+lua require("modicator").setup()
+lua require("smear_cursor").setup { legacy_computing_symbols_support = true }
 
 lua << EOF
     local transparent = require("transparent")
@@ -106,9 +127,10 @@ lua << EOF
     end
 EOF
 
-colorscheme monokai-pro
+colorscheme catppuccin-mocha
 
 " Plugin configurations
+call wilder#setup({'modes': [':', '/', '?']})
 lua require("mason").setup()
 lua require("mason-lspconfig").setup()
 lua require("nvim-autopairs").setup {}
@@ -117,11 +139,60 @@ lua require("Comment").setup()
 lua require("nvim-web-devicons").setup()
 lua require("nvim-tree").setup()
 lua require("colorizer").setup()
-lua vim.notify = require("notify")
-
-call wilder#setup({'modes': [':', '/', '?']})
-
+lua require("tabby").setup({})
+lua require("numbers").setup()
+lua require("visual-whitespace").setup()
+lua require("truncateline").setup({ enabled_on_start = true })
+lua require("precognition").setup({ startVisible = false })
+lua require("nvim-ts-autotag").setup()
 lua require("toggleterm").setup({open_mapping = [[<c-\>]]})
+lua require("nvim_context_vt").setup {}
+lua require("numb").setup()
+
+""" nvim-cmp + lspconfig
+lua << EOF
+    local cmp = require("cmp")
+    cmp.setup {
+        sources = cmp.config.sources {
+            { name = "nvim_lsp" }
+        },
+        mapping = cmp.mapping.preset.insert {
+            ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+            ['<C-f>'] = cmp.mapping.scroll_docs(4),
+            ['<C-Space>'] = cmp.mapping.complete(),
+            ['<Esc>'] = cmp.mapping.abort(),
+            ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+            ['<CR>'] = cmp.mapping.confirm({ select = false })
+        }
+    }
+
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local lsp = require("lspconfig")
+
+    lsp.clangd.setup {
+        capabilities = capabilities,
+        cmd = { "clangd", "--compile-commands-dir=build" },
+        on_attach = function(client, bufnr)
+            if client.server_capabilities.inlayHintProvider then
+                vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+            end
+        end
+    }
+
+    lsp.pyright.setup {
+        capabilities = capabilities
+    }
+
+EOF
+
+""" notify
+lua << EOF
+    local n = require("notify")
+    n.setup({
+        background_colour = "#11111b"
+    })
+    vim.notify = n
+EOF
 
 """ null-ls
 lua << EOF
@@ -145,10 +216,19 @@ EOF
 """ nvim-treesitter
 lua << EOF
     require("nvim-treesitter.configs").setup({
-        ensure_installed = {"c", "cpp", "python", "dart"},
+        ensure_installed = {
+            "lua",
+            "c",
+            "cpp",
+            "python",
+            "dart",
+            "javascript",
+            "html",
+            "css"
+        },
 
         sync_install = false,
-        auto_install = false,
+        auto_install = true,
 
         highlight = {
             enable = true
@@ -191,6 +271,7 @@ lua << EOF
     }
 EOF
 
+""" telescope
 lua << EOF
     require("telescope").setup {
         defaults = {
@@ -199,8 +280,35 @@ lua << EOF
     }
 EOF
 
+""" move
+lua << EOF
+    require('move').setup({
+        line = {
+            enable = true, -- Enables line movement
+            indent = true  -- Toggles indentation
+        },
+        block = {
+            enable = true, -- Enables block movement
+            indent = true   -- Toggles indentation
+        },
+        word = {
+            enable = false, -- Enables word movement
+        },
+        char = {
+            enable = false -- Enables char movement
+        }
+    })
+
+EOF
+
 " Keymaps
 let mapleader = " "
+
+""" Cursor navigation in insert mode
+inoremap <silent> <C-h> <Left>
+inoremap <silent> <C-l> <Right>
+inoremap <silent> <C-j> <Down>
+inoremap <silent> <C-k> <Up>
 
 """ Switch between windows
 nnoremap <silent> <leader>ww <C-w>w
@@ -220,7 +328,13 @@ nnoremap <silent> <leader>tf :Telescope find_files<CR>
 """ Side-Panel
 nnoremap <silent> <leader>bb :NvimTreeToggle<CR>
 
+""" Move line
+nnoremap <silent> <A-j> :MoveLine(1)<CR>
+nnoremap <silent> <A-k> :MoveLine(-1)<CR>
+vnoremap <silent> <A-j> :MoveBlock(1)<CR>
+vnoremap <silent> <A-k> :MoveBlock(-1)<CR>
+
 """ Coc auto-complete
-inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#confirm() : "\<Tab>"
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
-inoremap <silent><expr> <Esc> coc#pum#visible() ? coc#pum#cancel() : "\<Esc>"
+" inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#confirm() : "\<Tab>"
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+" inoremap <silent><expr> <Esc> coc#pum#visible() ? coc#pum#cancel() : "\<Esc>"
