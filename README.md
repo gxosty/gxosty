@@ -1,6 +1,6 @@
 ## Hi there 👋. I am gxost!
 
-I am software developer that likes _poking around_ with C++ and Python, tho sometimes touches other languages too. I love doing some low level stuff, especially **network related**. I can do mobile development too. Looking forward to have at least one full stack cross-platform app! 
+I am software developer that likes _poking around_ with C++ and Python, tho sometimes touch other languages too. I love doing some low level stuff, especially **network related**. I can do mobile development too. Looking forward to have at least one full stack cross-platform app! 
 
 <!--
 **gxosty/gxosty** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
