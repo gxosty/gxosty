@@ -42,7 +42,10 @@ Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'mfussenegger/nvim-lint'
 Plug 'mhartington/formatter.nvim'
-Plug 'nvim-tree/nvim-tree.lua'
+" Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'tpope/vim-abolish'
 Plug 'RRethy/vim-illuminate'
 Plug 'norcalli/nvim-colorizer.lua'
@@ -58,6 +61,7 @@ Plug 'andersevenrud/nvim_context_vt'
 Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'nacro90/numb.nvim'
 Plug 'fedepujol/move.nvim'
+Plug 'ray-x/lsp_signature.nvim'
 
 " I may find this interesting
 " Plug 'nosduco/remote-sshfs.nvim'
@@ -85,11 +89,15 @@ call plug#end()
 lua require("tokyonight").setup { transparent = vim.g.transparent_enabled }
 lua require("transparent").setup()
 lua require("modicator").setup()
-lua require("smear_cursor").setup { legacy_computing_symbols_support = true }
+" lua require("smear_cursor").setup {}
 
 lua << EOF
     local transparent = require("transparent")
-    transparent.clear_prefix("NvimTree")
+    -- transparent.clear_prefix("NvimTree")
+    transparent.clear_prefix("NeoTreeNormal")
+    transparent.clear_prefix("NeoTreeNormalNC")
+    transparent.clear_prefix("NeoTreeEndOfBuffer")
+    transparent.clear_prefix("NeoTreeWinSeparator")
     transparent.clear_prefix("ToggleTerm")
 
     require("monokai-pro").setup {
@@ -134,7 +142,7 @@ call wilder#setup({'modes': [':', '/', '?']})
 lua require("mason").setup()
 lua require("mason-lspconfig").setup()
 lua require("nvim-autopairs").setup {}
-lua require("lualine").setup()
+" lua require("lualine").setup({ options = { disabled_filetypes = { "NvimTree" } } } )
 lua require("Comment").setup()
 lua require("nvim-web-devicons").setup()
 lua require("nvim-tree").setup()
@@ -142,19 +150,22 @@ lua require("colorizer").setup()
 lua require("tabby").setup({})
 lua require("numbers").setup()
 lua require("visual-whitespace").setup()
-lua require("truncateline").setup({ enabled_on_start = true })
+" lua require("truncateline").setup({ enabled_on_start = true })
 lua require("precognition").setup({ startVisible = false })
 lua require("nvim-ts-autotag").setup()
 lua require("toggleterm").setup({open_mapping = [[<c-\>]]})
 lua require("nvim_context_vt").setup {}
 lua require("numb").setup()
+lua require("statusline")
 
-""" nvim-cmp + lspconfig
+""" nvim-cmp + lspconfig + lsp_signature
 lua << EOF
     local cmp = require("cmp")
     cmp.setup {
         sources = cmp.config.sources {
-            { name = "nvim_lsp" }
+            { name = "nvim_lsp" },
+            { name = "buffer" },
+            { name = "path" }
         },
         mapping = cmp.mapping.preset.insert {
             ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -163,6 +174,20 @@ lua << EOF
             ['<Esc>'] = cmp.mapping.abort(),
             ['<Tab>'] = cmp.mapping.confirm({ select = true }),
             ['<CR>'] = cmp.mapping.confirm({ select = false })
+        },
+        window = {
+            completion = cmp.config.window.bordered(),
+            documentation = cmp.config.window.bordered()
+        },
+        formatting = {
+            format = function(entry, vim_item)
+                vim_item.menu = ({
+                    nvim_lsp = "[LSP]",
+                    buffer = "[Buffer]",
+                    path = "[Path]"
+                })[entry.source.name]
+                return vim_item
+            end
         }
     }
 
@@ -171,18 +196,29 @@ lua << EOF
 
     lsp.clangd.setup {
         capabilities = capabilities,
-        cmd = { "clangd", "--compile-commands-dir=build" },
-        on_attach = function(client, bufnr)
-            if client.server_capabilities.inlayHintProvider then
-                vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-            end
-        end
+        cmd = {
+            "clangd",
+            -- "--clang-tidy",
+            -- "--clang-tidy-checks=performance-*,bugprone-*",
+            "--completion-style=detailed",
+            "--compile-commands-dir=build"
+        },
     }
 
-    lsp.pyright.setup {
-        capabilities = capabilities
-    }
+    lsp.pyright.setup { capabilities = capabilities }
+    lsp.lua_ls.setup { capabilities = capabilities }
+    lsp.rust_analyzer.setup { capabilities = capabilities }
 
+    local lsp_sig = require("lsp_signature")
+    lsp_sig.setup {
+        bind = true,
+        floating_window = false,
+        hint_enable = true,
+        hint_prefix = "🔹 ",
+        handler_opts = {
+            border = "rounded"
+        }
+    }
 EOF
 
 """ notify
@@ -220,6 +256,8 @@ lua << EOF
             "lua",
             "c",
             "cpp",
+            "cmake",
+            "rust",
             "python",
             "dart",
             "javascript",
@@ -326,7 +364,7 @@ nnoremap <silent> <leader>tb :Telescope buffers<CR>
 nnoremap <silent> <leader>tf :Telescope find_files<CR>
 
 """ Side-Panel
-nnoremap <silent> <leader>bb :NvimTreeToggle<CR>
+nnoremap <silent> <leader>bb :Neotree toggle<CR>
 
 """ Move line
 nnoremap <silent> <A-j> :MoveLine(1)<CR>
