@@ -145,7 +145,7 @@ lua require("nvim-autopairs").setup {}
 " lua require("lualine").setup({ options = { disabled_filetypes = { "NvimTree" } } } )
 lua require("Comment").setup()
 lua require("nvim-web-devicons").setup()
-lua require("nvim-tree").setup()
+" lua require("nvim-tree").setup()
 lua require("colorizer").setup()
 lua require("tabby").setup({})
 lua require("numbers").setup()
@@ -201,11 +201,12 @@ lua << EOF
             -- "--clang-tidy",
             -- "--clang-tidy-checks=performance-*,bugprone-*",
             "--completion-style=detailed",
-            "--compile-commands-dir=build"
+            -- "--compile-commands-dir=build"
         },
     }
 
-    lsp.pyright.setup { capabilities = capabilities }
+    -- lsp.pyright.setup { capabilities = capabilities }
+    lsp.ruff.setup { capabilities = capabilities }
     lsp.lua_ls.setup { capabilities = capabilities }
     lsp.rust_analyzer.setup { capabilities = capabilities }
 
