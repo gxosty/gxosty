@@ -1,0 +1,43 @@
+-- arg1: the plugin need to be loaded
+-- arg2: the module need to be required (relative path)
+
+-- lualine
+if GXOST_LUALINE == "full" then
+    plug("nvim-lualine/lualine.nvim", "lualine_full")
+else
+    plug("nvim-lualine/lualine.nvim", "lualine_compact")
+end
+
+-- treesitter
+plug("nvim-treesitter/nvim-treesitter")
+plug("nvim-treesitter/nvim-treesitter-textobjects")
+plug("nvim-treesitter/nvim-treesitter-context", "treesitter")
+
+-- autopairs
+plug("windwp/nvim-autopairs", plug_setup("nvim-autopairs"))
+
+-- plenary (for telescope)
+plug "nvim-lua/plenary.nvim"
+
+-- telescope
+plug("nvim-telescope/telescope.nvim")
+
+-- which key
+plug("folke/which-key.nvim")
+
+-- web devicons
+plug("nvim-tree/nvim-web-devicons", plug_setup("nvim-web-devicons"))
+
+-- nvim tree
+plug("nvim-tree/nvim-tree.lua", plug_setup("nvim-tree"))
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- mason
+plug("williamboman/mason.nvim", plug_setup("mason"))
+
+-- toggleterm
+plug("akinsho/toggleterm.nvim", "toggleterm")
+
+-- inline diagnostics
+plug("rachartier/tiny-inline-diagnostic.nvim", "inline_diagnostic")
