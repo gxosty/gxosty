@@ -42,7 +42,7 @@ lualine.setup {
       { 'diff', symbols = { added = ' ', modified = ' ', removed = ' ' } },
     },
     lualine_c = {
-      { 'filename', path = 0, symbols = { modified = ' ●', readonly = ' ', unnamed = '<noname>' } },
+      { 'filename', path = 0, symbols = { modified = ' ●', readonly = ' ', unnamed = '[󰮘]' } },
     },
     lualine_x = {
       {

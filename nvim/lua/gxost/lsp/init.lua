@@ -1,6 +1,8 @@
 local _lsps = {
     "luals",
-    "clangd"
+    "clangd",
+    "ruff",
+    -- "pyright",
 }
 
 local function add_lsp(module_name)
@@ -10,7 +12,7 @@ local function add_lsp(module_name)
 end
 
 local function add_lsps(lsps)
-    for k, v in ipairs(lsps) do
+    for _, v in ipairs(lsps) do
         add_lsp(v)
     end
 end

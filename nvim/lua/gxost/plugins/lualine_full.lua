@@ -19,12 +19,6 @@ local mode_map = {
   ['t'] = 't',
 }
 
--- Function to display minimal mode
-local function minimal_mode()
-  local mode_code = vim.api.nvim_get_mode().mode
-  return mode_map[mode_code] or '🅧'
-end
-
 local function mode_with_ghost()
   local mode_code = vim.api.nvim_get_mode().mode
   local mode_icon = mode_map[mode_code] or '🅧'
@@ -35,14 +29,14 @@ lualine.setup {
   options = {
     theme = 'auto',
     component_separators = { left = '', right = '' },
-    section_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' },
     disabled_filetypes = { "NvimTree" },
     globalstatus = true,
   },
   sections = {
     lualine_a = {
       { mode_with_ghost, padding = { left = 1, right = 1 }, separator = { left = '', right = '' } },
-      { 'filename', path = 0, symbols = { modified = ' ●', readonly = ' ', unnamed = '<noname>' }, separator = { left = '', right = '' } },
+      { 'filename', path = 0, symbols = { modified = ' ●', readonly = ' ', unnamed = '[󰮘] not_a_file' }, separator = { left = '', right = '' } },
     },
     lualine_b = {
     },

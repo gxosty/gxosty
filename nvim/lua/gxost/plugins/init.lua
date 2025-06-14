@@ -17,7 +17,7 @@ plug("nvim-treesitter/nvim-treesitter-context", "treesitter")
 plug("windwp/nvim-autopairs", plug_setup("nvim-autopairs"))
 
 -- plenary (for telescope)
-plug "nvim-lua/plenary.nvim"
+plug("nvim-lua/plenary.nvim")
 
 -- telescope
 plug("nvim-telescope/telescope.nvim")
@@ -41,3 +41,13 @@ plug("akinsho/toggleterm.nvim", "toggleterm")
 
 -- inline diagnostics
 plug("rachartier/tiny-inline-diagnostic.nvim", "inline_diagnostic")
+
+-- wilder
+plug("gelguy/wilder.nvim", 'wilder')
+
+-- nvim-cmp autocompletion
+plug('hrsh7th/cmp-nvim-lsp')
+plug('hrsh7th/cmp-buffer')
+plug('hrsh7th/cmp-path')
+plug('hrsh7th/cmp-cmdline')
+plug("hrsh7th/nvim-cmp", "cmp")
