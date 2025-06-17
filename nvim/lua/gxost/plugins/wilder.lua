@@ -10,7 +10,7 @@ wilder.set_option("renderer", wilder.popupmenu_renderer(
             border = 'FloatBorder'
         },
         left = { " ", wilder.popupmenu_devicons() },
-        border = { " 󰊠 ", "⠂⠄⠄⠂⠁⠁", " おばけ╮ ",
+        border = { " ╭ 󰊠 ", "─", " おばけ╮ ",
             " │•", " │ ",
             " ╰", "─", "╯ " },
         reverse = 1,

@@ -23,7 +23,7 @@ plug("nvim-lua/plenary.nvim")
 plug("nvim-telescope/telescope.nvim")
 
 -- which key
-plug("folke/which-key.nvim")
+plug("folke/which-key.nvim", "whichkey")
 
 -- web devicons
 plug("nvim-tree/nvim-web-devicons", plug_setup("nvim-web-devicons"))
@@ -51,3 +51,9 @@ plug('hrsh7th/cmp-buffer')
 plug('hrsh7th/cmp-path')
 plug('hrsh7th/cmp-cmdline')
 plug("hrsh7th/nvim-cmp", "cmp")
+
+-- alpha-nvim greeter
+plug("goolord/alpha-nvim", "alpha")
+
+-- blankline
+plug("lukas-reineke/indent-blankline.nvim", "blankline")
