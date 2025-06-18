@@ -9,4 +9,5 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 8
 vim.opt.wrap = false
 vim.opt.showmode = false
-
+vim.opt.fillchars = "eob: "
+vim.opt.cmdheight = 0

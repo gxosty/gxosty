@@ -1,6 +1,9 @@
 -- arg1: the plugin need to be loaded
 -- arg2: the module need to be required (relative path)
 
+-- alpha-nvim greeter
+plug("goolord/alpha-nvim", "alpha")
+
 -- lualine
 if GXOST_LUALINE == "full" then
     plug("nvim-lualine/lualine.nvim", "lualine_full")
@@ -52,8 +55,8 @@ plug('hrsh7th/cmp-path')
 plug('hrsh7th/cmp-cmdline')
 plug("hrsh7th/nvim-cmp", "cmp")
 
--- alpha-nvim greeter
-plug("goolord/alpha-nvim", "alpha")
-
 -- blankline
 plug("lukas-reineke/indent-blankline.nvim", "blankline")
+
+-- notify
+plug("rcarriga/nvim-notify", "notify")

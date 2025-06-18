@@ -7,12 +7,13 @@ wilder.setup({
 wilder.set_option("renderer", wilder.popupmenu_renderer(
     wilder.popupmenu_border_theme({
         highlights = {
-            border = 'FloatBorder'
+            border = 'NormalBorder',
         },
         left = { " ", wilder.popupmenu_devicons() },
         border = { " ╭ 󰊠 ", "─", " おばけ╮ ",
             " │•", " │ ",
             " ╰", "─", "╯ " },
         reverse = 1,
+        winblend = 0
     })
 ))

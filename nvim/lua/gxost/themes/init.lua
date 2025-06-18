@@ -17,7 +17,7 @@ plug("marko-cerovac/material.nvim")
 plug("danilo-augusto/vim-afterglow")
 
 -- other plugins for visuals
--- plug("xiyaowong/transparent.nvim")
+plug("xiyaowong/transparent.nvim", "transparent")
 -- plug("sphamba/smear-cursor.nvim")
 plug("karb94/neoscroll.nvim", "neoscroll")
 plug("mawkler/modicator.nvim", plug_setup("modicator"))

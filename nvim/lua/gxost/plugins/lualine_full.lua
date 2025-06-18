@@ -2,6 +2,8 @@
 
 local lualine = require('lualine')
 
+local edges = { '◈ ', ' ◈' }
+
 -- Custom symbols for modes
 local mode_map = {
     ['n'] = 'n',
@@ -51,7 +53,7 @@ lualine.setup {
     },
     sections = {
         lualine_a = {
-            { mode_with_ghost, padding = { left = 1, right = 1 }, separator = { left = '', right = '' } },
+            { mode_with_ghost, padding = { left = 1, right = 1 }, separator = { left = edges[1], right = '' } },
         },
         lualine_b = {
             { 'filename', path = 0, symbols = { modified = ' ●', readonly = ' ', unnamed = '󰮘' }, separator = { left = '', right = '' } },
@@ -89,7 +91,7 @@ lualine.setup {
         },
         lualine_z = {
             { 'progress', separator = '', padding = { left = 2, right = 2 } },
-            { 'location', padding = { left = 1, right = 1 }, separator = { right = '' } },
+            { 'location', padding = { left = 1, right = 1 }, separator = { right = edges[2] } },
         },
     },
     inactive_sections = {
