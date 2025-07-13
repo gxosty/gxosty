@@ -1,6 +1,6 @@
 local _lsps = {
     "luals",
-    "clangd",
+    -- "clangd",
     "ruff",
     -- "pyright",
 }

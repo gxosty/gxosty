@@ -8,7 +8,10 @@ GXOST_LUALINE = "full"
 GXOST_THEME = "monokai-pro-octagon"
 
 -- enable background transparency
-GXOST_TRANSPARENT = true
+GXOST_TRANSPARENT = false
+
+-- hide cmdline
+GXOST_HIDE_CMDLINE = false
 
 
 math.randomseed(os.time())

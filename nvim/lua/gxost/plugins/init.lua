@@ -60,3 +60,10 @@ plug("lukas-reineke/indent-blankline.nvim", "blankline")
 
 -- notify
 plug("rcarriga/nvim-notify", "notify")
+
+-- render markdown
+plug("MeanderingProgrammer/render-markdown.nvim")
+
+-- subvert
+plug("tpope/vim-abolish")
+
