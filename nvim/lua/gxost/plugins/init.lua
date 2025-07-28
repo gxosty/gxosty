@@ -67,3 +67,5 @@ plug("MeanderingProgrammer/render-markdown.nvim")
 -- subvert
 plug("tpope/vim-abolish")
 
+-- autotag
+plug("windwp/nvim-ts-autotag", plug_setup("nvim-ts-autotag"))

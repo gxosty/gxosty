@@ -5,7 +5,8 @@ CONFIG_ROOT = "gxost"
 GXOST_LUALINE = "full"
 
 -- colorscheme
-GXOST_THEME = "monokai-pro-octagon"
+-- GXOST_THEME = "monokai-pro-octagon"
+GXOST_THEME = "tokyonight-night"
 
 -- enable background transparency
 GXOST_TRANSPARENT = false

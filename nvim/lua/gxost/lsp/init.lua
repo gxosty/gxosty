@@ -3,6 +3,7 @@ local _lsps = {
     -- "clangd",
     "ruff",
     -- "pyright",
+    -- "jdtls",
 }
 
 local function add_lsp(module_name)
